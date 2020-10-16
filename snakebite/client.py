@@ -1546,7 +1546,10 @@ class HAClient(Client):
                 try:
                     results = func(self, *args, **kw)
                     while(True): # yield all results
-                        yield next(results)
+                        try:
+                            yield next(results)
+                        except StopIteration:
+                            return
                 except RequestError as e:
                     self.__handle_request_error(e)
                 except socket.error as e:
